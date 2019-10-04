@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
     has_many :schools ,through: :reviews
      @@prompt = TTY::Prompt.new
 
-     
+
 
     def self.handle_new_user
         puts "What is your name?"

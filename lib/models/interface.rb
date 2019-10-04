@@ -1,9 +1,9 @@
 class CommandLineInterface
     #the macro below gives us the ability to read out the prompt method
     attr_reader :prompt
-    #the macro below gives the CLI class user reader and writer methods
+    #the macro below gives the CLI class user_reader and user_writer methods
      attr_accessor :user
-    #the method below initializes instances with a prompt method when needed? #foggy
+    #the method below initializes instances with a prompt method when needed #foggy
      def initialize
        @prompt = TTY::Prompt.new
      end
@@ -19,10 +19,43 @@ class CommandLineInterface
 
 
   #the method below is a instance method that takes in an object that is an array of objects/instances
-#    of the School class as an argument
+#    of the School class 
+
+#=============================================================================================
+
+# def show_reviews(school)
+#   #the code below takes a school object from the array and pulls out the review stored in it 
+#   #and prints out the review objects name and content
+
+#   # school   school.
+
+# ##the school array object is being generated/grabbed from the "enter_school_name_prmpt" method  ##foggy
+
+#   # school.reviews.each do |review|
+#   #      p review.user.name 
+#   #      p review.content
+#   #   end
+
+#    p school.reviews.content
+# binding.pry
+#   # p school.reviews.user.name
+#   # p school.reviews.content
+#     #the prompt menu points to instance methods written in the interface.rb file
+#     @prompt.select("What would you like to do today?") do |menu|
+#       menu.choice "I would like to create a review", -> {self.write_review(user,school) }
+#       menu.choice "I would like to read reviews", -> { self.enter_school_name_prmpt }
+#       menu.choice "I would like to update a review" , -> {self.update_review(user,school)}
+#       menu.choice "I would like to delete a review", -> {self.delete_review(user,school)}
+#       menu.choice "I would like to logout", -> { `open https://www.google.com/` } 
+#     end     
+# end
+
+
     def show_reviews(school)
-        #the code below takes a school object from the array and pulls out the review stored in it , iterates through
+        #the code below takes a school object from the array and pulls out the review stored in it 
         #and prints out the review objects name and content
+
+        # school   school.
 
       ##the school array object is being generated/grabbed from the "enter_school_name_prmpt" method  ##foggy
 
@@ -30,8 +63,10 @@ class CommandLineInterface
              p review.user.name 
              p review.content
           end
+        # p school.reviews.user.name
+        # p school.reviews.content
           #the prompt menu points to instance methods written in the interface.rb file
-          @prompt.select("would you like to do today?") do |menu|
+          @prompt.select("What would you like to do today?") do |menu|
             menu.choice "I would like to create a review", -> {self.write_review(user,school) }
             menu.choice "I would like to read reviews", -> { self.enter_school_name_prmpt }
             menu.choice "I would like to update a review" , -> {self.update_review(user,school)}
@@ -40,6 +75,7 @@ class CommandLineInterface
           end     
     end
 
+ #==========================================================================================================   
 
     #the method below takes in two objects as arguments 
     # still kind of foggy on if the school object is being generated/grabbed from the "enter_school_name_prmpt" method but
@@ -60,12 +96,24 @@ class CommandLineInterface
             menu.choice "logout",-> {`open https://www.google.com/`}
           end
     end
+#=======================================================================================================================================
+#code to potentially handle new school input if not listed in the database
+
+# if School.nil?
+#     puts "Couldn't find a school by with that name"
+#     puts "But lets get you started anyway!"
+#     user = School.create(name: name)            
+# end
+
+
+#====================================================================================================================================
 #i believe that in order to delete a review that pertains to a particular user i passed in the arguments
 #of user and school into this methods params##slight fog##i did that to get access to a users ID and a schools ID
     def delete_review(user,school)
         #the "usersreviews" variable captures the reviews that relate to the user who wants to see them
         #and returns an array...see below
        usersreviews = Review.all.select { |review| review.user_id == user.id  }
+    # usersreviews = user.reviews
 #=======================================================================================================
        # the "users_content" variable captures the "usersreviews" variable wich is equal to an array
        # and iterates through it capturing each review and tells it to read out the content of each review
@@ -93,8 +141,9 @@ class CommandLineInterface
     def update_review(user,school)  
 # the "usersreviews" var iterates through all reviews and returns an array of reviews that match the users ID 
        usersreviews = Review.all.select { |review| review.user_id == user.id  }
+    usersreviews= user.reviews
 #=============================================================================================================       
-       users_content = usersreviews.each { |review|  p review.content }
+       users_content = usersreviews.each { |review|  p "#{review.content} for  #{review.school.name}" }
 # "users_content"  var captures a particular users reviews and prints out the content of each review
 #========================================================================================================== 
 
@@ -123,6 +172,7 @@ class CommandLineInterface
         #of a school.the reason i can call .all , and .map is because active record macros contain these methods
         
         school_listings = School.all.map { |school| school.name   }
+        # school_listings = school.name
         p school_listings
         puts "Enter a school name to get started"
         school_name_input = gets.chomp
@@ -130,11 +180,135 @@ class CommandLineInterface
         show_reviews(name_of_school)     
     end
 
+
+  #   def enter_school_name_prmpt
+  #     puts " These are our current school listings"
+  #     #the code below utilizes the relationship established between classes in the macros to grab
+  #     #  all instances
+  #     #of a school.the reason i can call .all , and .map is because active record macros contain these methods
+      
+  #     # review_listings = Review.all.select { |review| review.school_id == school.id   }
+  #     # school_listings = school.name
+  #     # p school_listings
+  #     # binding.pry
+     
+  #     puts "Enter a school name to get started"
+  #     school_name_input = gets.chomp
+  #     name_of_school = School.find_by(name:school_name_input)
+  #     show_reviews(name_of_school)  
+  # end
+
+
+
+
+ 
+
+
 #========================================================================================================================================================
 
     def run
         self.user = greet       
         puts "If your search for a school has ended but youd like to get more information about your choice you've come to the right place!"
-        enter_school_name_prmpt             
+        enter_school_name_prmpt           
     end
 end
+
+#==================================================================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# if School.nil?
+#     puts "Couldn't find a school by with that name"
+#     puts "But lets get you started anyway!"
+#     user = School.create(name: name)            
+# end
+
+
+# def write_review_for_school_in_the_dir(user,school)
+#     puts "please enter your review"
+#     user_review_input = gets.chomp
+# #in order to create a review that pertains to particular user and school instance ive written the code below
+#     new_review = Review.create( user_id: user.id ,school_id: school.id ,content:user_review_input)
+    
+#     puts "Thanks for leaving a review!"
+
+#     @prompt.select("If you would like to update/edit or delete your review select the following options") do |menu|
+#         menu.choice "Update/Edit", -> { self.update_review(user,school) }
+#         menu.choice "Delete", -> { self.write_review } 
+#         menu.choice "return to main menu",-> {self.enter_school_name_prmpt}
+#         menu.choice "logout",-> {`open https://www.google.com/`}
+#       end
+# end
+# #================================================================
+
+
+
+
+# #================================================================
+# @prompt.select("write a review for a school!") do |menu|
+#     menu.choice "schools in our directory", -> { self.write_review(user,school) }
+#     menu.choice "review a school not listed in our directory", -> { self.write_review } 
+    
+#   end
+
+# def new_school(name)
+
+#   puts "Enter the school name you'd like to review"
+#   newschool = gets.chomp
+#   newschool_listing = School.create(name: newschool)
+#       puts "your school has been listed"
+
+#     # newschool_review = gets.chomp
+
+#   end
+
+
+#   name_of_school = School.find_by(name:school_name_input)
+
+
+
+
+#   def write_review(user,school)
+#     puts "please enter your review"
+#     user_review_input = gets.chomp
+# #in order to create a review that pertains to particular user and school instance ive written the code below
+#     new_review = Review.create( user_id: user.id ,school_id: school.id ,content:user_review_input)
+    
+#     puts "Thanks for leaving a review!"
+
+#     @prompt.select("If you would like to update/edit or delete your review select the following options") do |menu|
+#         menu.choice "Update/Edit", -> { self.update_review(user,school) }
+#         menu.choice "Delete", -> { self.write_review } 
+#         menu.choice "return to main menu",-> {self.enter_school_name_prmpt}
+#         menu.choice "logout",-> {`open https://www.google.com/`}
+#       end
+# end
+
